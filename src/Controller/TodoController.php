@@ -4,6 +4,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 use Doctrine\ORM\EntityManagerInterface;
 
 use App\Entity\Task;
@@ -17,8 +18,8 @@ class TodoController extends AbstractController
     public function index()
     {
         return $this->render("index.html.twig", [
-            'items' => $this->fetchTasks(),
-        ]);
+                                'items' => $this->fetchTasks(),
+                            ]);
     }    
 
     /**
@@ -27,10 +28,9 @@ class TodoController extends AbstractController
     public function insertTask()
     {
         $entityManager = $this->getDoctrine()->getManager();
-        
         $task = new Task($_POST["task"]);
-        if (strlen($task->getText()) > 0)
-        {
+        
+        if (strlen($task->getText()) > 0) {
             $entityManager->persist($task);
             $entityManager->flush();
         }
@@ -43,12 +43,10 @@ class TodoController extends AbstractController
      */
     public function deleteTask(int $id){
         $entityManager = $this->getDoctrine()->getManager();
-
-        $currentTask = $entityManager
-                    ->getRepository(Task::class)
-                    ->findOneBy(array(
-                        "id" => $id
-                    ));
+        $currentTask = $entityManager->getRepository(Task::class)
+                                    ->findOneBy(array(
+                                        "id" => $id
+                                    ));
 
         $entityManager->remove($currentTask);
         $entityManager->flush();
@@ -56,9 +54,10 @@ class TodoController extends AbstractController
         return $this->redirectToRoute('home');
     }
 
-    public function fetchTasks(){
-        $entityManager = $this->getDoctrine()
-                            ->getRepository(Task::class);
-        return $entityManager->findAll();
+    public function fetchTasks()
+    {
+        return $this->getDoctrine()
+                    ->getRepository(Task::class)
+                    ->findAll();
     }
 }

@@ -16,17 +16,18 @@ class Task
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
     /**
      * @ORM\Column(type="string", length=100)
      */
     private $text;
     
-    public function __construct(String $text)
+    public function __construct(string $text)
     {
         $this->text = $text;
     }
 
-    public function getText(): String
+    public function getText(): string
     {
         return $this->text;
     }
