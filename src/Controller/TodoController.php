@@ -27,10 +27,13 @@ class TodoController extends AbstractController
     public function insertTask()
     {
         $entityManager = $this->getDoctrine()->getManager();
-
+        
         $task = new Task($_POST["task"]);
-        $entityManager->persist($task);
-        $entityManager->flush();
+        if (strlen($task->getText()) > 0)
+        {
+            $entityManager->persist($task);
+            $entityManager->flush();
+        }
 
         return $this->redirectToRoute('home');
     }

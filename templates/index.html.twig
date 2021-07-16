@@ -6,17 +6,31 @@
 
 {% block body %} 
 
-    <form method="post", action="{{ url("insert_task") }}">
-        <input type="text" name="task" placeholder="Search">
-        <input type="submit" value="Submit">
-    </form>
-    </br>
-
-    <table>
-        {% for item in items %}
-            <tr>{{ item.getText() }}</tr>
-            <button><a href="{{ path('delete_task', {'id': item.id }) }}">Delete</a></button>
-            </br>
-        {% endfor %}
-    </table>    
+    <div class="form-group">
+        <form method="post", action="{{ url("insert_task") }}">
+            <input type="text" name="task" placeholder="Insert a task here">
+            <input type="submit" value="Submit" class="btn btn-dark">
+        </form>
+        </br>
+    </div>
+    <div>
+        <table class="table">
+            <thead>
+                <tr><td scope="col"><h1>Tasks</h1></td></tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr scpe>
+                        <td scope="col">
+                            {{ item.getText() }}
+                            <a style='text-decoration:none' href="{{ path('delete_task', {'id': item.id }) }}"><button class="btn btn-dark">Delete</button></a>
+                        </td>
+                        {# <td scope="col">
+                        </td> #}
+                    </tr>
+                    </br>
+                {% endfor %}
+            </tbody>
+        </table> 
+    </div>  
 {% endblock %}
