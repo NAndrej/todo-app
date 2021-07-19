@@ -22,7 +22,12 @@
                 {% for item in items %}
                     <tr scpe>
                         <td scope="col">
-                            {{ item.getText() }}
+                            {% if item.isTaskDone() %}
+                                <p><del>{{ item.getText() }}</del><p> 
+                            {% else %}
+                                <p>{{ item.getText() }}<p> 
+                            {% endif %}
+                            <a style='text-decoration:none' href="{{ path('finish_task', {'id': item.id }) }}"><button class="btn btn-dark">Done</button></a>
                             <a style='text-decoration:none' href="{{ path('delete_task', {'id': item.id }) }}"><button class="btn btn-dark">Delete</button></a>
                         </td>
                     </tr>

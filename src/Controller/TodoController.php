@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 
 use App\Entity\Task;
+use App\Service\TaskService;
 
 class TodoController extends AbstractController
 {
@@ -15,49 +16,42 @@ class TodoController extends AbstractController
     /**
      * @Route("/", name="index", methods={"GET"}, name="home")
      */
-    public function index()
+    public function index(TaskService $taskService)
     {
         return $this->render("index.html.twig", [
-                                'items' => $this->fetchTasks(),
+                                'items' => $taskService->fetchAll(),
                             ]);
     }    
-
     /**
      * @Route("/insert", methods={"POST"}, name="insert_task")
      */
-    public function insertTask()
+    public function insertTask(TaskService $taskService)
     {
-        $entityManager = $this->getDoctrine()->getManager();
         $task = new Task($_POST["task"]);
         
-        if (strlen($task->getText()) > 0) {
-            $entityManager->persist($task);
-            $entityManager->flush();
+        if (strlen($task->getText()) > 0)
+        {
+            $taskService->addTask($task);
         }
-
+        
         return $this->redirectToRoute('home');
     }
 
     /**
      * @Route("/delete/id?={id}", methods={"GET"}, name="delete_task")
      */
-    public function deleteTask(int $id){
-        $entityManager = $this->getDoctrine()->getManager();
-        $currentTask = $entityManager->getRepository(Task::class)
-                                    ->findOneBy(array(
-                                        "id" => $id
-                                    ));
-
-        $entityManager->remove($currentTask);
-        $entityManager->flush();
-
+    public function deleteTask(int $id, TaskService $taskService)
+    {
+        $taskService->removeTask($id);
         return $this->redirectToRoute('home');
     }
 
-    public function fetchTasks()
+    /**
+     * @Route("/finish/id?={id}", methods={"GET"}, name="finish_task")
+     */
+    public function finishTask(int $id, TaskService $taskService)
     {
-        return $this->getDoctrine()
-                    ->getRepository(Task::class)
-                    ->findAll();
+        $taskService->finishTask($id);
+        return $this->redirectToRoute('home');
     }
 }

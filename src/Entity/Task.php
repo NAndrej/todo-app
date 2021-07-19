@@ -21,10 +21,16 @@ class Task
      * @ORM\Column(type="string", length=100)
      */
     private $text;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isDone;
     
     public function __construct(string $text)
     {
         $this->text = $text;
+        $this->isDone = false;
     }
 
     public function getText(): string
@@ -40,5 +46,15 @@ class Task
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function finish()
+    {
+        $this->isDone = true;
+    }
+
+    public function isTaskDone(): bool
+    {
+        return $this->isDone;
     }
 }
