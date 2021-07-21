@@ -26,7 +26,6 @@ class TaskService
     public function addTask(Task $task)
     {
         $this->entityManager->persist($task);
-        $this->entityManager->flush();
     }
 
     public function fetchTask(int $id): Task
@@ -42,15 +41,18 @@ class TaskService
     {
         $currentTask = $this->fetchTask($id);
         $this->entityManager->remove($currentTask);
-        $this->entityManager->flush();
     }
 
     public function finishTask(int $id)
     {
         $currentTask = $this->fetchTask($id);
         $currentTask->finish();
-        $this->removeTask($id);
-        $this->addTask($currentTask);
+        $this->flush();
+    }
+
+    public function flush()
+    {
+        $this->entityManager->flush();
     }
 
 }

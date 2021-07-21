@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 use App\Entity\Task;
 use App\Service\TaskService;
+use Symfony\Component\Mailer\Mailer;
 
 class TodoController extends AbstractController
 {
@@ -32,6 +33,7 @@ class TodoController extends AbstractController
         if (strlen($task->getText()) > 0)
         {
             $taskService->addTask($task);
+            $taskService->flush();
         }
         
         return $this->redirectToRoute('home');
@@ -43,6 +45,7 @@ class TodoController extends AbstractController
     public function deleteTask(int $id, TaskService $taskService)
     {
         $taskService->removeTask($id);
+        $taskService->flush();
         return $this->redirectToRoute('home');
     }
 
