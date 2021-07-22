@@ -32,9 +32,18 @@ class TaskService
     {
         return $this->entityManager
                     ->getRepository(Task::class)
-                    ->findOneBy(array(
+                    ->findOneBy([
                         "id" => $id
-                    ));
+                    ]);
+    }
+
+    public function fetchTaskByName(string $name)
+    {
+        return $this->entityManager
+                    ->getRepository(Task::class)
+                    ->findOneBy([
+                        "text" => $name
+                    ]);
     }
 
     public function removeTask(int $id)

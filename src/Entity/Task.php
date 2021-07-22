@@ -2,8 +2,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use phpDocumentor\Reflection\Types\Integer;
-
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\JoinColumn;
 /**
  * @ORM\Entity
  * @ORM\Table(name="tasks")
@@ -18,7 +18,7 @@ class Task
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=100, unique="True")
      */
     private $text;
 
@@ -26,6 +26,12 @@ class Task
      * @ORM\Column(type="boolean")
      */
     private $isDone;
+
+    /**
+     * @ManyToOne(targetEntity="User", inversedBy="tasks")
+     * @JoinColumn(name="userId", referencedColumnName="id")
+     */
+    private $user;
     
     public function __construct(string $text)
     {
@@ -57,4 +63,21 @@ class Task
     {
         return $this->isDone;
     }
+
+    public function assignToUser(User $u)
+    {
+        $u->addTask($this);
+        $this->user = $u;
+    }
+    
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    public function isAssigned(): bool
+    {
+        return $this->getUser() != null;
+    }
+    
 }
