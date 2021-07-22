@@ -38,7 +38,7 @@ class AssignTaskCommand extends Command
         $task = $this
                     ->taskService
                     ->fetchTaskByName($taskName);
-        $user = $thisa
+        $user = $this
                     ->userService
                     ->fetchUserByEmail($userEmail);
 
