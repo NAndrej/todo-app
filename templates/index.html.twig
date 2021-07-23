@@ -2,8 +2,6 @@
 
 {% block title %} TODO Application {% endblock %}
 
-{% block stylesheets %} <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> {% endblock %}
-
 {% block body %} 
 <div class="container">
     <div class="row align-items-start">
@@ -32,21 +30,20 @@
             </thead>
             <tbody>
                 {% for item in tasks %}
-                    <tr scpe>
+                    <tr>
                         <td scope="col">
                             Task name: 
-                            {% if item.isTaskDone() %}
-                                <del>{{ item.getText() }}</del> 
+                            {% if item.isDone %}
+                                <del>{{ item.text }}</del> 
                             {% else %}
-                                {{ item.getText() }}
+                                {{ item.text }}
                             {% endif %}
                             <br/>
-                            {% if item.isAssigned() %}
-                                Asignee: {{ item.getUser().getEmail() }}
+                            {% if item.name %}
+                                Asignee: {{ item.email }}
                             {% endif %}
                             <br/>
                             <a style='text-decoration:none' href="{{ path('finish_task', {'id': item.id }) }}"><button class="btn btn-dark">Done</button></a>
-                            <a style='text-decoration:none' href="{{ path('delete_task', {'id': item.id }) }}"><button class="btn btn-dark">Delete</button></a>
                             <hr>
                         </td>
                     </tr>
@@ -67,7 +64,6 @@
                     <tr scpe>
                         <td scope="col">
                             {{ item.getEmail() }}
-                            <a style='text-decoration:none' href="{{ path('delete_user', {'id': item.id }) }}"><button class="btn btn-dark">Delete</button></a>
                         </td>
                     </tr>
                     </br>

@@ -2,14 +2,16 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\Entity\Task;
 use App\Entity\User;
+use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
 use App\Service\TaskService;
 use App\Service\UserService;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class TodoController extends AbstractController
 {
@@ -47,7 +49,7 @@ class TodoController extends AbstractController
     {
         $taskService->removeTask($id);
         $taskService->flush();
-        return $this->redirectToRoute('home');
+        return $this->redirectToRoute('manage_tasks');
     }
 
     /**
@@ -60,12 +62,60 @@ class TodoController extends AbstractController
     }
 
     /**
+     * @Route("/tasks", methods={"POST"}, name="search_tasks")
+     */
+    public function searchTask(TaskRepository $taskRepository, Request $request)
+    {   
+        $searchParam = $request->get('q');
+
+        return $this->render(
+            "tasks.html.twig", [
+                'tasks' => $taskRepository->searchAll($searchParam),
+            ]
+        );
+    }
+
+    /**
      * @Route("/tasks", methods={"GET"}, name="manage_tasks")
      */
     public function manageTasks()
     {
+        $taskRepository = $this->getDoctrine()
+            ->getManager()
+            ->getRepository("App:Task");
+
         return $this->render(
-            'tasks.html.twig'
+            "tasks.html.twig", [
+                'tasks' => $taskRepository->findAll(),
+            ]
         );
     }
+
+    /**
+     * @Route("/tasks/assign/id?={id}", methods={"GET"}, name="assign_task")
+     */
+    public function assignTask(TaskRepository $taskRepository, 
+                                Request $request, 
+                                UserRepository $userRepository,
+                                EntityManagerInterface $entityManager)
+    {
+        $taskId = $request->get("id");
+        $userEmail = $request->get("user_email");
+
+        $task = $taskRepository->findOneBy([
+            "id"=>$taskId
+        ]);
+
+        $user = $userRepository->findOneBy([
+            "email"=>$userEmail
+        ]);
+
+        $task->assignToUser($user);
+        $entityManager->flush();
+        return $this->render(
+            "tasks.html.twig", [
+                'tasks' => $taskRepository->findAll(),
+            ]
+        );
+    }    
 }

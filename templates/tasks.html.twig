@@ -1,2 +1,47 @@
 {% extends "base.html.twig" %}
 
+{% block body %}
+    <form class="col-sm-3" method="post" action="{{ url("search_tasks") }}">
+        <div class="input-group col-sm-3">
+            <input type="text"
+                name="q"
+                class="form-control"
+                placeholder="Search..."
+            >
+            <input type="submit" value="Search" class="btn btn-dark">
+        </div>
+    </form>
+
+
+    <div class="col-sm-3">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Task name</th>
+                    <th>Asignee</th>
+                    <th>Done?</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in tasks %}
+                    <tr>
+                        <td>{{ item.text }}</td>
+                        <td>{{ item.name }}</td>
+                        {% if item.isDone %}
+                            <td>Yes</td>
+                        {% else %}
+                            <td>No</td>
+                        {% endif %}
+                        <td><a style='text-decoration:none' href="{{ path('delete_task', {'id': item.id }) }}"><button class="btn btn-dark">Delete</button></a></td>
+                        <form action="{{ url("assign_task", {'id': item.id}) }}">
+                            <td><input type="text" name="user_email" /></td>
+                            <td><a style='text-decoration:none' ><button class="btn btn-dark">Assign</button></a></td>
+                        </form>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

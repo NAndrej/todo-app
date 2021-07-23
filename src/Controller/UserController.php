@@ -41,8 +41,11 @@ class UserController extends AbstractController
      */
     public function manageUsers()
     {
+        $users = [];
         return $this->render(
-            "users.html.twig"
+            "users.html.twig", [
+                'users' => $users,
+            ]
         );
     }
 
