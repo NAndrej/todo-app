@@ -58,4 +58,14 @@ class TodoController extends AbstractController
         $taskService->finishTask($id);
         return $this->redirectToRoute('home');
     }
+
+    /**
+     * @Route("/tasks", methods={"GET"}, name="manage_tasks")
+     */
+    public function manageTasks()
+    {
+        return $this->render(
+            'tasks.html.twig'
+        );
+    }
 }

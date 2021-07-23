@@ -36,4 +36,14 @@ class UserController extends AbstractController
         );
     }
 
+    /**
+     * @Route("/users", methods={"GET"}, name="manage_users")
+     */
+    public function manageUsers()
+    {
+        return $this->render(
+            "users.html.twig"
+        );
+    }
+
 }
