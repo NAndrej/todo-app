@@ -21,27 +21,44 @@
                     <th>Asignee</th>
                     <th>Done?</th>
                     <th></th>
-                    <th></th>
+                    <form method="post", action="{{ url("insert_task") }}">
+                        <th>
+                            <input type="text" name="task" placeholder="Insert a task here">
+                        </th>
+                        <th>
+                                <input type="submit" value="Insert" class="btn btn-dark">
+                        </th>
+                    </form>
                 </tr>
             </thead>
             <tbody>
                 {% for item in tasks %}
                     <tr>
-                        <td>{{ item.text }}</td>
-                        <td>{{ item.name }}</td>
-                        {% if item.isDone %}
+                        <td>{{ item.getText() }}</td>
+                        {% if item.getUser() %}
+                            <td>{{ item.getUser().getName() }} : {{ item.getUser().getEmail() }}</td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        {% if item.isTaskDone() %}
                             <td>Yes</td>
                         {% else %}
                             <td>No</td>
                         {% endif %}
                         <td><a style='text-decoration:none' href="{{ path('delete_task', {'id': item.id }) }}"><button class="btn btn-dark">Delete</button></a></td>
                         <form action="{{ url("assign_task", {'id': item.id}) }}">
-                            <td><input type="text" name="user_email" /></td>
+                            <td><input type="text" name="user_email" placeholder="Insert an asignee email here"/></td>
                             <td><a style='text-decoration:none' ><button class="btn btn-dark">Assign</button></a></td>
                         </form>
+
+                        <form action="{{ url("unassign_task", {'id': item.id}) }}">
+                            <td><a style='text-decoration:none' ><button class="btn btn-dark">Unassign</button></a></td>
+                        </form>
+
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
+        <a style='text-decoration:none' href="{{ url('home') }}"><button class="btn btn-dark">Home</button></a>
     </div>
 {% endblock %}

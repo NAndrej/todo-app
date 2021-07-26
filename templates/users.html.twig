@@ -1,1 +1,47 @@
 {% extends "base.html.twig" %}
+
+{% block body %}
+    <form class="col-sm-3" method="post" action="{{ url("search_users") }}">
+        <div class="input-group col-sm-3">
+            <input type="text"
+                name="q"
+                class="form-control"
+                placeholder="Search..."
+            >
+            <input type="submit" value="Search" class="btn btn-dark">
+        </div>
+    </form>
+
+
+    <div class="col-sm-3">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>User name</th>
+                    <th>User email</th>
+                    <form method="post", action="{{ url("insert_user") }}">
+                        <th>
+                            <input type="text" name="user_name" placeholder="Insert user name here">
+                        </th>
+                        <th>
+                            <input type="text" name="user_email" placeholder="Insert user email here">
+                        </th>
+                        <th>
+                            <input type="submit" value="Insert" class="btn btn-dark">
+                        </th>
+                    </form>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in users %}
+                    <tr>
+                        <td>{{ item.getName() }}</td>
+                        <td>{{ item.getEmail() }}</td>
+                        <td><a style='text-decoration:none' href="{{ path('delete_user', {'id': item.id }) }}"><button class="btn btn-dark">Delete</button></a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a style='text-decoration:none' href="{{ url('home') }}"><button class="btn btn-dark">Home</button></a>
+    </div>
+{% endblock %}

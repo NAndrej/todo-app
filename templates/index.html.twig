@@ -6,18 +6,10 @@
 <div class="container">
     <div class="row align-items-start">
         <div class="col-5">
-            <form method="post", action="{{ url("insert_task") }}">
-                <input type="text" name="task" placeholder="Insert a task here">
-                <input type="submit" value="Insert" class="btn btn-dark">
-            </form>
+           
         </div>
-        <div class="col">
-            <form method="post", action="{{ url("insert_user") }}">
-                <input type="text" name="user_name" placeholder="Insert user name here">
-                {# </br> #}
-                <input type="text" name="user_email" placeholder="Insert user email here">
-                <input type="submit" value="Insert" class="btn btn-dark">
-            </form>
+        <div class="col-5">
+            
         </div>
         </br>
         
@@ -33,14 +25,14 @@
                     <tr>
                         <td scope="col">
                             Task name: 
-                            {% if item.isDone %}
-                                <del>{{ item.text }}</del> 
+                            {% if item.isTaskDone() %}
+                                <del>{{ item.getText() }}</del> 
                             {% else %}
-                                {{ item.text }}
+                                {{ item.getText() }}
                             {% endif %}
                             <br/>
-                            {% if item.name %}
-                                Asignee: {{ item.email }}
+                            {% if item.getUser() %}
+                                Asignee: {{ item.getUser().getEmail() }}
                             {% endif %}
                             <br/>
                             <a style='text-decoration:none' href="{{ path('finish_task', {'id': item.id }) }}"><button class="btn btn-dark">Done</button></a>

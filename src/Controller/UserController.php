@@ -7,7 +7,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use App\Controller\TodoController;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use App\Service\UserService;
+use Symfony\Component\HttpFoundation\Request;
 
 class UserController extends AbstractController
 {
@@ -20,9 +22,10 @@ class UserController extends AbstractController
         $userService->insertUser($user);
         $userService->flush();
 
-        return $this->forward(
-            "App\Controller\TodoController::index"
-        );
+        // return $this->forward(
+        //     "App\Controller\TodoController::index"
+        // );
+        return $this->redirectToRoute("manage_users");
     }
     /**
      * @Route("/users/delete/id?={id}", methods={"GET"}, name="delete_user")
@@ -31,9 +34,10 @@ class UserController extends AbstractController
     {
         $userService->removeUser($id);
         $userService->flush();
-        return $this->forward(
-            "App\Controller\TodoController::index"
-        );
+        // return $this->forward(
+        //     "App\Controller\TodoController::index"
+        // );
+        return $this->redirectToRoute("manage_users");
     }
 
     /**
@@ -42,9 +46,26 @@ class UserController extends AbstractController
     public function manageUsers()
     {
         $users = [];
+        $userRepository = $this->getDoctrine()
+                                ->getManager()
+                                ->getRepository("App:User");
         return $this->render(
             "users.html.twig", [
-                'users' => $users,
+                'users' => $userRepository->findAll(),
+            ]
+        );
+    }
+
+    /**
+     * @Route("/users", methods={"POST"}, name="search_users")
+     */
+    public function searchTask(UserRepository $userRepository, Request $request)
+    {   
+        $searchParam = $request->get('q');
+
+        return $this->render(
+            "users.html.twig", [
+                'users' => $userRepository->searchAll($searchParam),
             ]
         );
     }

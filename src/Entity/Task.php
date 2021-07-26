@@ -75,6 +75,11 @@ class Task
         return $this->user;
     }
 
+    public function unassignTask()
+    {
+        $this->user = null;
+    }
+
     public function isAssigned(): bool
     {
         return $this->getUser() != null;

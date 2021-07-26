@@ -26,6 +26,7 @@ class TodoController extends AbstractController
                                 'users'=> $userService->fetchAll()
                             ]);
     }    
+
     /**
      * @Route("/tasks/insert", methods={"POST"}, name="insert_task")
      */
@@ -38,10 +39,9 @@ class TodoController extends AbstractController
             $taskService->addTask($task);
             $taskService->flush();
         }
-        
-        return $this->redirectToRoute('home');
+        return $this->redirectToRoute('manage_tasks');
     }
-
+    
     /**
      * @Route("/tasks/delete/id?={id}", methods={"GET"}, name="delete_task")
      */
@@ -117,5 +117,29 @@ class TodoController extends AbstractController
                 'tasks' => $taskRepository->findAll(),
             ]
         );
-    }    
+    }
+
+    /**
+     * @Route("/tasks/unassign/id?={id}", methods={"GET"}, name="unassign_task")
+     */
+    public function unassignTask(TaskRepository $taskRepository, 
+                                Request $request,
+                                EntityManagerInterface $entityManager)                                
+    {
+        $taskId = $request->get("id");
+
+        $task = $taskRepository->findOneBy([
+            "id"=>$taskId
+        ]);
+
+        $task->unassignTask();
+        $entityManager->flush();
+
+        return $this->render(
+            "tasks.html.twig", [
+                'tasks' => $taskRepository->findAll(),
+            ]
+        );
+    }
+    
 }

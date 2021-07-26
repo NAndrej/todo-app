@@ -47,4 +47,15 @@ class UserRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function searchAll(?string $searchParam)
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->where('u.name LIKE :searchParam')
+            ->orWhere('u.email LIKE :searchParam')
+            ->setParameter('searchParam', '%' . $searchParam . '%');
+
+        $query = $qb->getQuery();
+        return $query->execute();
+    }
 }

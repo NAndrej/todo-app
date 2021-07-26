@@ -3,10 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Task;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 class TaskRepository extends ServiceEntityRepository
@@ -21,13 +18,13 @@ class TaskRepository extends ServiceEntityRepository
      */
     public function findAll()
     {
-        
-        $dql = "SELECT t.id, t.text, t.isDone, u.name, u.email
+        $dql = "SELECT t
                 FROM App\Entity\Task t 
                     LEFT JOIN App\Entity\User u
                         WITH t.user = u.id";
 
         $query = $this->getEntityManager()->createQuery($dql);
+        
         return $query->execute();
     }
 
